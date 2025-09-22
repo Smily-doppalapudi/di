@@ -1,0 +1,65 @@
+#include<iostream>
+#include<climits>
+using namespace std;
+#define N 9
+int findMinDist(int dist[], bool visited[]){
+int minDist = INT_MAX;
+int minNode = -1;
+for(int i=0;i<N;i++){
+if(!visited[i] && dist[i] <= minDist){
+minDist = dist[i];
+minNode = i;
+}}
+return minNode;
+}
+void printPath(int prev[],int node){
+if(prev[node]==-1){
+cout<<node<<"";
+return;
+}
+printPath(prev,prev[node]);
+cout<<node<<"";}
+void dijkstra(int graph[N][N], int start,int end){
+int dist[N];
+bool visited[N];
+int prev[N];
+for(int i=0;i<N;i++){
+dist[i] = INT_MAX;
+visited[i] = false;
+prev[i] = -1;
+}
+dist[start] = 0;
+for(int count=0; count<N-1; count++){
+int u = findMinDist(dist, visited);
+if(u == -1) break;
+visited[u] = true;
+for(int v=0; v<N; v++){
+if(!visited[v] && graph[u][v] &&
+dist[u]!=INT_MAX && dist[u]+graph[u][v]<dist[v]){
+dist[v] = dist[u]+graph[u][v];
+prev[v] = u;
+}}}
+if(dist[end]==INT_MAX){
+cout<<"No path from"<<start<<" to"<<end<<endl;
+}else{
+cout<<"Cost from"<<start<<"to"<<end<<"="<<dist[end]<<endl;
+cout<<"path:";
+printPath(prev,end);
+cout<<endl;
+}}
+int main(){
+int graph[N][N];
+cout<<"Enter adjacency matrix("<<N<<"x"<<N<<"):"<<endl;
+for(int i=0;i<N;i++)
+for(int j=0;j<N;j++)
+cin>>graph[i][j];
+int start, end;
+cout<<"Enter start node:";
+cin>>start;
+cout<<"Enter end node:";
+cin>>end;
+dijkstra(graph, start, end);
+return 0;
+}
+
+
